@@ -48,7 +48,7 @@ export default defineConfig({
     ],
     [
       "meta",
-      { property: "og:url", content: "https://taxfyle.github.io/FxKit/" },
+      { property: "og:url", content: "https://jeffijoe.github.io/FxKit/" },
     ],
   ],
 
@@ -103,18 +103,18 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [{ icon: "github", link: "https://github.com/taxfyle/FxKit" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/jeffijoe/FxKit" }],
     footer: {
       message: "Released under the MIT License.",
       copyright: "Copyright © Taxfyle and contributors.",
     },
     editLink: {
-      pattern: "https://github.com/taxfyle/FxKit/edit/main/docs/:path",
+      pattern: "https://github.com/jeffijoe/FxKit/edit/main/docs/:path",
       text: "Edit this page on GitHub",
     },
   },
   base: "/FxKit/",
   sitemap: {
-    hostname: "https://taxfyle.github.io/FxKit/",
+    hostname: "https://jeffijoe.github.io/FxKit/",
   },
 });
