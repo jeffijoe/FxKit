@@ -15,7 +15,7 @@
   <PropertyGroup>
     <Authors>Jeff Hansen, Jamie Corkhill</Authors>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/taxfyle/FxKit</RepositoryUrl>
+    <RepositoryUrl>https://github.com/jeffijoe/FxKit</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>

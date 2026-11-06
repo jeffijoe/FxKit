@@ -6,7 +6,7 @@ for generating union types, exhaustive `Match`, and much more.
 
 ## Documentation
 
-Visit the [official documentation](https://taxfyle.github.io/FxKit/) to get started.
+Visit the [official documentation](https://jeffijoe.github.io/FxKit/) to get started.
 
 ## Installation
 
