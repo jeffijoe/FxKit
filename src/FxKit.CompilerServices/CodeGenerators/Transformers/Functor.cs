@@ -85,7 +85,7 @@ internal sealed record ReferencedFunctors(
                 locators.Add(
                     new FunctorImplementationLocator(
                         FunctorFullyQualifiedMetadataName: firstParamMetadataName,
-                        Namespace: methodSymbol.ContainingNamespace.ToDisplayString()));
+                        Namespace: methodSymbol.ContainingNamespace.ToNonGlobalDisplayName()));
             }
         }
 
@@ -121,7 +121,7 @@ internal sealed record FunctorCandidate
     /// <summary>
     ///     The namespace the functor is contained within.
     /// </summary>
-    public string ContainingNamespace { get; }
+    public string? ContainingNamespace { get; }
 
     /// <summary>
     ///     The functor's type parameters.
@@ -136,7 +136,7 @@ internal sealed record FunctorCandidate
     private FunctorCandidate(
         string name,
         string fullyQualifiedMetadataName,
-        string containingNamespace,
+        string? containingNamespace,
         EquatableArray<string> typeParameters,
         EquatableArray<TypeParameterConstraints> constraintClauses)
     {
@@ -148,6 +148,19 @@ internal sealed record FunctorCandidate
     }
 
     /// <summary>
+    ///     Creates a <see cref="Functor" /> from this <see cref="FunctorCandidate" />.
+    /// </summary>
+    /// <param name="functorImplementationNamespace"></param>
+    /// <returns></returns>
+    public Functor ToFunctor(string? functorImplementationNamespace) =>
+        new(
+            Name,
+            ContainingNamespace,
+            TypeParameters,
+            ConstraintClauses,
+            functorImplementationNamespace);
+
+    /// <summary>
     ///     Creates a <see cref="FunctorCandidate" />.
     /// </summary>
     /// <param name="symbol"></param>
@@ -157,25 +170,12 @@ internal sealed record FunctorCandidate
         return new FunctorCandidate(
             name: symbol.Name,
             fullyQualifiedMetadataName: symbol.GetFullyQualifiedMetadataName(),
-            containingNamespace: symbol.ContainingNamespace.ToDisplayString(),
+            containingNamespace: symbol.ContainingNamespace.ToNonGlobalDisplayName(),
             typeParameters: ToTypeParameterNames(symbol.TypeParameters),
             constraintClauses: symbol.TypeParameters
                 .Select(TypeParameterConstraints.FromTypeParameterSymbol)
                 .ToEquatableArray());
     }
-
-    /// <summary>
-    ///     Creates a <see cref="Functor" /> from this <see cref="FunctorCandidate" />.
-    /// </summary>
-    /// <param name="functorImplementationNamespace"></param>
-    /// <returns></returns>
-    public Functor ToFunctor(string functorImplementationNamespace) =>
-        new(
-            Name,
-            ContainingNamespace,
-            TypeParameters,
-            ConstraintClauses,
-            functorImplementationNamespace);
 }
 
 /// <summary>
@@ -185,7 +185,7 @@ internal sealed record FunctorCandidate
 /// <param name="Namespace">The namespace that provides the functor's `Map` implementation.</param>
 internal sealed record FunctorImplementationLocator(
     string FunctorFullyQualifiedMetadataName,
-    string Namespace);
+    string? Namespace);
 
 /// <summary>
 ///     Represents an outer container functor type.
@@ -193,10 +193,10 @@ internal sealed record FunctorImplementationLocator(
 [DebuggerDisplay("{ToString()}")]
 internal sealed record Functor(
     string Name,
-    string ContainingNamespace,
+    string? ContainingNamespace,
     EquatableArray<string> TypeParameters,
     EquatableArray<TypeParameterConstraints> ConstraintClauses,
-    string FunctorImplementationNamespace)
+    string? FunctorImplementationNamespace)
 {
     /// <summary>
     ///     The name of the functor (its identifier).
@@ -211,12 +211,12 @@ internal sealed record Functor(
     /// <summary>
     ///     The namespace the functor is contained within.
     /// </summary>
-    public string ContainingNamespace { get; } = ContainingNamespace;
+    public string? ContainingNamespace { get; } = ContainingNamespace;
 
     /// <summary>
     ///     The namespace that contains this functor's implementation of `Map`.
     /// </summary>
-    public string FunctorImplementationNamespace { get; } = FunctorImplementationNamespace;
+    public string? FunctorImplementationNamespace { get; } = FunctorImplementationNamespace;
 
     /// <summary>
     ///     The functor's type parameters.

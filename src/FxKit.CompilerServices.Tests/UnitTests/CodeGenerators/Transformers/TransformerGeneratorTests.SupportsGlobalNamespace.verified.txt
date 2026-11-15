@@ -1,0 +1,41 @@
+﻿using Containers;
+using System;
+using System.Threading.Tasks;
+
+#nullable enable
+public static class BoxT
+{
+    /// <summary>
+    ///     <c>Wrapped</c> of <c>Box</c> Transformer Method for <c>Map</c>.
+    /// </summary>
+    public static Wrapped<Box<U>> MapT<T, U>(this Wrapped<Box<T>> source, Func<T, U> selector) => source.Map(inner => inner.Map(selector));
+    /// <summary>
+    ///     <c>Task</c> of <c>Box</c> Transformer Method for <c>Map</c>.
+    /// </summary>
+    public static Task<Box<U>> MapT<T, U>(this Task<Box<T>> source, Func<T, U> selector) => source.Map(inner => inner.Map(selector));
+}
+
+-------------
+
+using System;
+using System.Threading.Tasks;
+
+#nullable enable
+namespace Containers
+{
+    public static class WrappedT
+    {
+        /// <summary>
+        ///     <c>Box</c> of <c>Wrapped</c> Transformer Method for <c>Map</c>.
+        /// </summary>
+        public static Box<Wrapped<U>> MapT<T, U>(this Box<Wrapped<T>> source, Func<T, U> selector) => source.Map(inner => inner.Map(selector));
+        /// <summary>
+        ///     <c>Task</c> of <c>Wrapped</c> Transformer Method for <c>Map</c>.
+        /// </summary>
+        public static Task<Wrapped<U>> MapT<T, U>(this Task<Wrapped<T>> source, Func<T, U> selector) => source.Map(inner => inner.Map(selector));
+    }
+}
+
+-------------
+
+[assembly: FxKit.CompilerServices.ContainsFunctors]

@@ -92,6 +92,7 @@ internal sealed record FunctorMethodDescriptor
             constraintClauses: ConstraintClauses,
             requiredNamespaces: RequiredNamespaces
                 .Append(constructedType.ContainingNamespace)
+                .SelectNotNull(static x => x)
                 .ToEquatableArray(),
             location: Location);
     }
@@ -132,14 +133,13 @@ internal sealed record FunctorMethodDescriptor
                 method.ParameterList.Parameters,
                 static (parameterSymbol, syntax) => (Symbol: parameterSymbol, Syntax: syntax))
             .Skip(1)
-            .Select(
-                static tuple => new FunctorMethodParameter(
-                    TypeFullName: tuple.Symbol.Type.ToDisplayString(
-                        // We can use minimal qualified format since we
-                        // track and include namespaces.
-                        format: SymbolDisplayFormat.MinimallyQualifiedFormat),
-                    Name: tuple.Symbol.Name,
-                    Default: tuple.Syntax.Default?.Value.ToString()))
+            .Select(static tuple => new FunctorMethodParameter(
+                TypeFullName: tuple.Symbol.Type.ToDisplayString(
+                    // We can use minimal qualified format since we
+                    // track and include namespaces.
+                    format: SymbolDisplayFormat.MinimallyQualifiedFormat),
+                Name: tuple.Symbol.Name,
+                Default: tuple.Syntax.Default?.Value.ToString()))
             .ToEquatableArray();
 
         return new FunctorMethodDescriptor(

@@ -18,7 +18,7 @@ namespace FxKit.CompilerServices.CodeGenerators.Transformers;
 internal sealed record TransformerSet(
     string HintName,
     string GeneratedClassName,
-    string FunctorNamespace,
+    string? FunctorNamespace,
     EquatableArray<string> RequiredNamespaces,
     EquatableArray<FunctorMethodDescriptor> MethodsWithCollidingTypeParameters,
     EquatableArray<FunctorTransformerMethodDescriptor> TransformerMethods)
@@ -38,11 +38,11 @@ internal sealed record TransformerSet(
         IReadOnlyList<Functor> allOuterContainers,
         string fullFunctorMetadataName,
         string functorName,
-        string functorNamespace,
+        string? functorNamespace,
         IReadOnlyList<FunctorMethodDescriptor> methods,
         CancellationToken cancellationToken)
     {
-        var namespaceList = new HashSet<string>();
+        var namespaceList = new HashSet<string?>();
         var methodsWithCollidingTypeParams = new List<FunctorMethodDescriptor>();
         var transformerMethods = new List<FunctorTransformerMethodDescriptor>(capacity: methods.Count);
 
@@ -145,6 +145,7 @@ internal sealed record TransformerSet(
             GeneratedClassName: $"{functorName}T",
             FunctorNamespace: functorNamespace,
             RequiredNamespaces: namespaceList
+                .SelectNotNull(static x => x)
                 .OrderBy(static x => x, StringComparer.InvariantCulture)
                 .ToEquatableArray(),
             MethodsWithCollidingTypeParameters: methodsWithCollidingTypeParams.ToEquatableArray(),

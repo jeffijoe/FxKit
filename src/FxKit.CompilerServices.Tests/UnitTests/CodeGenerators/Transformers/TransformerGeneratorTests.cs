@@ -14,13 +14,13 @@ public class TransformerGeneratorTests
             using FxKit.CompilerServices;
             using System.Collections.Generic;
             using System.Threading.Tasks;
-        
+
             [Functor]
             public struct Result<TOk, TErr>
                 where TErr : notnull
                 where TOk : notnull
             {}
-        
+
             public static class Result
             {
                 [GenerateTransformer]
@@ -44,19 +44,19 @@ public class TransformerGeneratorTests
                 using FxKit.CompilerServices;
                 using System.Collections.Generic;
                 using System.Threading.Tasks;
-            
+
                 [Functor]
                 public struct Result<TOk, TErr>
                     where TOk : notnull
                     where TErr : notnull
                 {}
-            
+
                 [Functor]
                 public struct Validation<TValid, TInvalid>
                     where TValid : notnull
                     where TInvalid : notnull
                 {}
-            
+
                 public static class Result
                 {
                     [GenerateTransformer]
@@ -66,12 +66,12 @@ public class TransformerGeneratorTests
                         where TOk : notnull
                         where TNewOk : notnull
                         where TErr : notnull  => throw new NotImplementedException();
-            
+
                     [GenerateTransformer]
                     public static TOk Unwrap<TOk, TErr>(this Result<TOk, TErr> result)
                         where TOk : notnull
                         where TErr : notnull => throw new NotImplementedException();
-            
+
                     [GenerateTransformer]
                     public static Task<Result<TNewOk, TErr>> FlatMapAsync<TOk, TErr, TNewOk>(
                         this Result<TOk, TErr> source,
@@ -80,7 +80,7 @@ public class TransformerGeneratorTests
                         where TErr : notnull
                         where TNewOk : notnull => throw new NotImplementedException();
                 }
-            
+
                 public static class Validation
                 {
                     [GenerateTransformer]
@@ -92,7 +92,7 @@ public class TransformerGeneratorTests
                         where TInvalid : notnull
                         => throw new NotImplementedException();
                 }
-            
+
                 public static class TaskExt
                 {
                     [GenerateTransformer]
@@ -103,7 +103,7 @@ public class TransformerGeneratorTests
                         var tasks = source.Select(selector);
                         return await Task.WhenAll(tasks);
                     }
-            
+
                     [GenerateTransformer]
                     public static async Task<IEnumerable<T>> Sequence<T>(
                         this IEnumerable<Task<T>> source)
@@ -120,7 +120,7 @@ public class TransformerGeneratorTests
                     using System;
                     using System.Threading.Tasks;
                     using System.Collections.Generic;
-            
+
                     public static class E
                     {
                         public static async Task<U> Map<T, U>(
@@ -128,22 +128,61 @@ public class TransformerGeneratorTests
                             Func<T, U> selector) => selector(await source);
                     }
                 }
-            
+
                 namespace EnumerableExtensions
                 {
                     using System;
                     using System.Collections.Generic;
-            
+
                     public static class E
                     {
                          public static IEnumerable<U> Map<T, U>(
                             this IEnumerable<T> source,
                             Func<T, U> selector) => source.Select(selector);
-            
+
                         public static IReadOnlyList<U> Map<T, U>(
                             this IReadOnlyList<T> source,
                             Func<T, U> selector) => source.Select(selector);
                     }
+                }
+            }
+            """);
+
+        await output.VerifyGeneratedCode();
+    }
+
+    [Test]
+    public async Task SupportsGlobalNamespace()
+    {
+        var output = Generate(
+            """
+            using System;
+            using System.Threading.Tasks;
+            using FxKit.CompilerServices;
+
+            [Functor]
+            public record Box<T>(T Item);
+
+            public static class BoxExtensions
+            {
+                [GenerateTransformer]
+                public static Box<U> Map<T, U>(this Box<T> source, Func<T, U> selector) =>
+                    new(selector(source.Item));
+
+                public static async Task<U> Map<T, U>(this Task<T> source, Func<T, U> selector) =>
+                    selector(await source);
+            }
+
+            namespace Containers
+            {
+                [Functor]
+                public record Wrapped<T>(T Item);
+
+                public static class WrappedExtensions
+                {
+                    [GenerateTransformer]
+                    public static Wrapped<U> Map<T, U>(this Wrapped<T> source, Func<T, U> selector) =>
+                        new(selector(source.Item));
                 }
             }
             """);
@@ -161,13 +200,13 @@ public class TransformerGeneratorTests
                 using FxKit.CompilerServices;
                 using System.Collections.Generic;
                 using System.Threading.Tasks;
-            
+
                 [Functor]
                 public struct Result<TOk, TErr>
                     where TErr : notnull
                     where TOk : notnull
                 {}
-            
+
                 public static class Result
                 {
                     [GenerateTransformer]
@@ -178,14 +217,14 @@ public class TransformerGeneratorTests
                         where TErr : notnull
                         where TOk : notnull => throw new NotImplementedException();
                 }
-            
+
                 // These have the same type parameter names as Result which is a collision.
                 [Functor]
                 public struct Validation<TOk, TErr>
                     where TErr : notnull
                     where TOk : notnull
                 {}
-            
+
                 public static class Validation
                 {
                     [GenerateTransformer]
@@ -228,11 +267,11 @@ public class TransformerGeneratorTests
                   using FxKit.CompilerServices;
                   using StringAlias = string;
                   using Monads;
-              
+
                   [Functor]
                   public record Filtered<T>(IReadOnlyList<T> Items)
                       where T : IEquatable<T>, IEquatable<StringAlias>;
-              
+
                   public static class FilteredExtensions
                   {
                       [GenerateTransformer]
@@ -243,7 +282,7 @@ public class TransformerGeneratorTests
                           where U : IEquatable<U>, IEquatable<StringAlias>
                           => new Filtered<U>(source.Items.Select(selector).ToList())
                   }
-              
+
                   public static class Testing
                   {
                       public static void Test()
@@ -264,7 +303,7 @@ public class TransformerGeneratorTests
         var output = Generate(
             $$"""
                   {{ResultTypeAndImplementation}}
-              
+
                   namespace App
                   {
                     using System;
@@ -272,7 +311,7 @@ public class TransformerGeneratorTests
                     using FxKit.CompilerServices;
                     using Monads;
                     using StringAlias = string;
-              
+
                     public static class ResultExtensions
                     {
                         [GenerateTransformer]
@@ -284,13 +323,13 @@ public class TransformerGeneratorTests
                             => throw new NotImplementedException();
                     }
                   }
-              
+
                   namespace TaskExtensions
                   {
                       using System;
                       using System.Threading.Tasks;
                       using System.Collections.Generic;
-              
+
                       public static class E
                       {
                           public static async Task<U> Map<T, U>(

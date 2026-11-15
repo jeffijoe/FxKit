@@ -11,24 +11,7 @@ namespace FxKit.CompilerServices.CodeGenerators.Transformers;
 internal abstract record ConcreteOrConstructedType
 {
     /// <summary>
-    ///     A constructed generic return type (e.g. <c>Option&lt;int&gt;</c>).
-    /// </summary>
-    internal sealed record Constructed(ConstructedType ConstructedType) : ConcreteOrConstructedType
-    {
-        public static ConcreteOrConstructedType Of(ConstructedType constructedType) =>
-            new Constructed(constructedType);
-    }
-
-    /// <summary>
-    ///     A concrete return type (e.g <c>int</c>).
-    /// </summary>
-    internal sealed record Concrete(ConcreteType Type) : ConcreteOrConstructedType
-    {
-        public static ConcreteOrConstructedType Of(ConcreteType type) => new Concrete(type);
-    }
-
-    /// <summary>
-    ///     Converts a <see cref="ConcreteOrConstructedType"/> to <see cref="TypeSyntax"/>.
+    ///     Converts a <see cref="ConcreteOrConstructedType" /> to <see cref="TypeSyntax" />.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
@@ -51,6 +34,23 @@ internal abstract record ConcreteOrConstructedType
                 Constructed.Of(constructedType: ConstructedType.From(type)),
             _ => Concrete.Of(type: ConcreteType.From(symbol))
         };
+
+    /// <summary>
+    ///     A constructed generic return type (e.g. <c>Option&lt;int&gt;</c>).
+    /// </summary>
+    internal sealed record Constructed(ConstructedType ConstructedType) : ConcreteOrConstructedType
+    {
+        public static ConcreteOrConstructedType Of(ConstructedType constructedType) =>
+            new Constructed(constructedType);
+    }
+
+    /// <summary>
+    ///     A concrete return type (e.g <c>int</c>).
+    /// </summary>
+    internal sealed record Concrete(ConcreteType Type) : ConcreteOrConstructedType
+    {
+        public static ConcreteOrConstructedType Of(ConcreteType type) => new Concrete(type);
+    }
 }
 
 /// <summary>
@@ -104,13 +104,13 @@ internal record ConstructedType
     /// <summary>
     ///     The namespace that the generic type declaration is contained within.
     /// </summary>
-    public string ContainingNamespace { get; }
+    public string? ContainingNamespace { get; }
 
     private ConstructedType(
         string name,
         string fullyQualifiedMetadataName,
         EquatableArray<ConcreteOrConstructedType> typeArguments,
-        string containingNamespace)
+        string? containingNamespace)
     {
         Name = name;
         FullyQualifiedMetadataName = fullyQualifiedMetadataName;
@@ -127,7 +127,10 @@ internal record ConstructedType
     /// <param name="fullyQualifiedMetadataName"></param>
     /// <param name="containingNamespace"></param>
     /// <returns></returns>
-    public ConstructedType ReplaceReference(string name, string fullyQualifiedMetadataName, string containingNamespace) =>
+    public ConstructedType ReplaceReference(
+        string name,
+        string fullyQualifiedMetadataName,
+        string? containingNamespace) =>
         new(
             name: name,
             fullyQualifiedMetadataName: fullyQualifiedMetadataName,
@@ -156,7 +159,7 @@ internal record ConstructedType
         new(
             name: symbol.Name,
             fullyQualifiedMetadataName: symbol.GetFullyQualifiedMetadataName(),
-            containingNamespace: symbol.ContainingNamespace.ToDisplayString(),
+            containingNamespace: symbol.ContainingNamespace.ToNonGlobalDisplayName(),
             typeArguments: symbol.TypeArguments.Select(ConcreteOrConstructedType.FromTypeSymbol)
                 .ToEquatableArray());
 }
