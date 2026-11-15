@@ -100,6 +100,24 @@
       <ParentFile>UnionGeneratorTests</ParentFile>
       <DependentUpon>UnionGeneratorTests.cs</DependentUpon>
     </None>
+    <None Update="UnitTests\CodeGenerators\Lambdas\LambdaGeneratorConstructorLambdaTest.SupportsGlobalNamespace.received.txt">
+      <DependentUpon>LambdaGeneratorConstructorLambdaTest.cs</DependentUpon>
+    </None>
+    <None Update="UnitTests\CodeGenerators\Lambdas\LambdaGeneratorConstructorLambdaTest.SupportsGlobalNamespace.verified.txt">
+      <DependentUpon>LambdaGeneratorConstructorLambdaTest.cs</DependentUpon>
+    </None>
+    <None Update="UnitTests\CodeGenerators\Lambdas\LambdaGeneratorMethodLambdaTests.SupportsGlobalNamespace.received.txt">
+      <DependentUpon>LambdaGeneratorMethodLambdaTests.cs</DependentUpon>
+    </None>
+    <None Update="UnitTests\CodeGenerators\Lambdas\LambdaGeneratorMethodLambdaTests.SupportsGlobalNamespace.verified.txt">
+      <DependentUpon>LambdaGeneratorMethodLambdaTests.cs</DependentUpon>
+    </None>
+    <None Update="UnitTests\CodeGenerators\Unions\UnionGeneratorTests.SupportsGlobalNamespace.verified.txt">
+      <DependentUpon>UnionGeneratorTests.cs</DependentUpon>
+    </None>
+    <None Update="UnitTests\CodeGenerators\EnumMatch\EnumMatchGeneratorTests.SupportsGlobalNamespace.verified.txt">
+      <DependentUpon>EnumMatchGeneratorTests.cs</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>

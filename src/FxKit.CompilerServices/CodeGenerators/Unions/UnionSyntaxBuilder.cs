@@ -23,10 +23,12 @@ internal static class UnionSyntaxBuilder
         sb.WriteLine("using System.Diagnostics;");              // Needed for [DebuggerHidden]
         sb.WriteLine("using System.Diagnostics.CodeAnalysis;"); // Needed for [ExcludeFromCodeCoverage]
         sb.WriteLine("using System.Runtime.CompilerServices;"); // Needed for [MethodImpl]
-
-        // Add namespace.
         sb.WriteLine();
-        sb.WriteLine($"namespace {union.UnionNamespace};\n");
+
+        if (union.UnionNamespace is not null)
+        {
+            sb.WriteLine($"namespace {union.UnionNamespace};\n");
+        }
 
         // Write the type hierarchy.
         using (TypeHierarchyWriter.WriteTypeHierarchy(sb, union.AncestorTypeHierarchy))
@@ -44,6 +46,7 @@ internal static class UnionSyntaxBuilder
                     {
                         sb.WriteLine();
                     }
+
                     needsNewline = true;
                     PrintUnionConstructor(sb, union, constructor);
                 }
@@ -117,6 +120,7 @@ internal static class UnionSyntaxBuilder
             {
                 sb.Write("?");
             }
+
             sb.Write($" {param.Identifier}");
             sb.WriteIf(i < member.Parameters.Length - 1, ",");
         }

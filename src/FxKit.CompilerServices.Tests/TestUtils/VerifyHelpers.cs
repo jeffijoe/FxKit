@@ -50,6 +50,9 @@ public static class VerifyHelpers
         }
 
         // ReSharper disable once ExplicitCallerInfoArgument
-        await Verify(diagnostics.Select(d => d.ToString()).OrderBy(b => b), settings, sourceFile);
+        await Verify(
+            diagnostics.Select(d => d.ToString()).OrderBy(b => b, StringComparer.InvariantCulture),
+            settings,
+            sourceFile);
     }
 }

@@ -65,13 +65,12 @@ internal sealed record ReferencedFunctors(
 
             var methodSymbols = typeSymbol.GetMembers(FunctorMapMethodName)
                 .OfType<IMethodSymbol>()
-                .Where(
-                    static x => x is
-                    {
-                        IsStatic: true,
-                        IsExtensionMethod: true,
-                        IsGenericMethod: true
-                    });
+                .Where(static x => x is
+                {
+                    IsStatic: true,
+                    IsExtensionMethod: true,
+                    IsGenericMethod: true
+                });
 
             foreach (var methodSymbol in methodSymbols)
             {

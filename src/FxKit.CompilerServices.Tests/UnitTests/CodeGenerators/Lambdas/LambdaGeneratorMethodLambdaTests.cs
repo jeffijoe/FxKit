@@ -32,6 +32,31 @@ public class LambdaGeneratorMethodLambdaTests
         await generated.VerifyGeneratedCode();
     }
 
+    [Test]
+    public async Task SupportsGlobalNamespace()
+    {
+        const string InputSource =
+            """
+            using System.Collections.Generic;
+            using FxKit.CompilerServices;
+
+            public partial class Container
+            {
+                public partial class MyClass<T> where T : notnull
+                {
+                   [Lambda]
+                   public static MyClass<T> Create<R>(List<R> arg1, int arg2, string arg3)
+                   {
+                       throw new Exception();
+                   }
+                }
+            }
+            """;
+
+        var generated = Generate(InputSource);
+        await generated.VerifyGeneratedCode();
+    }
+
     private static string Generate(string source) =>
         CodeGeneratorTestUtil.GetGeneratedOutput(new LambdaGenerator(), source);
 }

@@ -47,7 +47,7 @@ public class EnumMatchGenerator : IIncrementalGenerator
             FullyQualifiedName: enumSymbol.ToDisplayString(),
             Name: enumSymbol.Name,
             HintName: enumSymbol.GetFullyQualifiedMetadataName(),
-            ContainingNamespace: enumSymbol.ContainingNamespace.ToDisplayString(),
+            ContainingNamespace: enumSymbol.ContainingNamespace.ToNonGlobalDisplayName(),
             Accessibility: SyntaxFacts.GetText(enumSymbol.DeclaredAccessibility),
             Members: members);
     }
@@ -85,6 +85,6 @@ internal sealed record EnumGeneration(
     string FullyQualifiedName,
     string Name,
     string HintName,
-    string ContainingNamespace,
+    string? ContainingNamespace,
     string Accessibility,
     EquatableArray<string> Members);

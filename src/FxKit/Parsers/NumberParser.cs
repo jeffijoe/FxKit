@@ -1,4 +1,6 @@
-﻿namespace FxKit.Parsers;
+﻿using System.Globalization;
+
+namespace FxKit.Parsers;
 
 /// <summary>
 ///     Problems parsing numbers.
@@ -41,6 +43,8 @@ public static class NumberParser
             .FlatMap(ParseDecimalCore);
 
         static Validation<decimal, NumberParseProblem> ParseDecimalCore(string str) =>
-            decimal.TryParse(str, out var value) ? value : NumberParseProblem.Malformed;
+            decimal.TryParse(str, CultureInfo.InvariantCulture, out var value)
+                ? value
+                : NumberParseProblem.Malformed;
     }
 }
