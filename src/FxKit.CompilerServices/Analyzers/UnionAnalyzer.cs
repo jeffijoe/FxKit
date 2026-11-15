@@ -258,13 +258,14 @@ public class UnionAnalyzer : DiagnosticAnalyzer
         BaseTypeDeclarationSyntax recordDeclarationSyntax)
     {
         // Check if the record inherits/implements anything.
-        if (recordDeclarationSyntax.BaseList?.Types is not { Count: > 0 } baseTypes)
+        var baseList = recordDeclarationSyntax.BaseList;
+        if (baseList is null || baseList.Types.Count == 0)
         {
             return;
         }
 
         // Check if any of them is a declared union.
-        foreach (var baseTypeSyntax in baseTypes)
+        foreach (var baseTypeSyntax in baseList.Types)
         {
             // Retrieve the base type symbol.
             var symbolInfo = ctx.SemanticModel.GetSymbolInfo(baseTypeSyntax.Type);
