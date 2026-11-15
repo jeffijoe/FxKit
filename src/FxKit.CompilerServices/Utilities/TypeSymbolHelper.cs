@@ -30,7 +30,7 @@ internal static class TypeSymbolHelper
 
         foreach (var typeArgument in namedTypeSymbol.TypeArguments)
         {
-            if (typeArgument.ContainingNamespace.IsGlobalNamespace)
+            if (!typeArgument.ContainingNamespace.IsGlobalNamespace)
             {
                 yield return typeArgument.ContainingNamespace.ToDisplayString();
             }

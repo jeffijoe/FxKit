@@ -55,33 +55,32 @@ public class TransformerGenerator : IIncrementalGenerator
 
         // Get symbols for intrinsic outer functors (IEnumerable, IReadOnlyList, etc).
         var functorCandidatesFromIntrinsicFunctors = context.CompilationProvider
-            .Select(
-                static (compilation, _) =>
+            .Select(static (compilation, _) =>
+            {
+                // NOTE: These never change between runs, as they are based on a static
+                // list of known types
+                if (cachedIntrinsicFunctorCandidates != null)
                 {
-                    // NOTE: These never change between runs, as they are based on a static
-                    // list of known types
-                    if (cachedIntrinsicFunctorCandidates != null)
+                    return new EquatableArray<FunctorCandidate>(cachedIntrinsicFunctorCandidates);
+                }
+
+                var result =
+                    new List<FunctorCandidate>(capacity: intrinsicFunctorMetadataNames.Count);
+                foreach (var metadataName in intrinsicFunctorMetadataNames)
+                {
+                    var symbol = compilation.GetTypeByMetadataName(metadataName);
+                    if (symbol is null)
                     {
-                        return new EquatableArray<FunctorCandidate>(cachedIntrinsicFunctorCandidates);
+                        continue;
                     }
 
-                    var result =
-                        new List<FunctorCandidate>(capacity: intrinsicFunctorMetadataNames.Count);
-                    foreach (var metadataName in intrinsicFunctorMetadataNames)
-                    {
-                        var symbol = compilation.GetTypeByMetadataName(metadataName);
-                        if (symbol is null)
-                        {
-                            continue;
-                        }
+                    result.Add(FunctorCandidate.From(symbol));
+                }
 
-                        result.Add(FunctorCandidate.From(symbol));
-                    }
-
-                    var array = result.ToArray();
-                    cachedIntrinsicFunctorCandidates = array;
-                    return new EquatableArray<FunctorCandidate>(array);
-                })
+                var array = result.ToArray();
+                cachedIntrinsicFunctorCandidates = array;
+                return new EquatableArray<FunctorCandidate>(array);
+            })
             .WithTrackingName("FunctorCandidatesFromIntrinsicFunctors");
 
         // Find marked type declarations (functors).
@@ -106,13 +105,12 @@ public class TransformerGenerator : IIncrementalGenerator
             .Combine(context.CompilationProvider)
             // Ensure we don't re-scan references that don't change.
             .Select(static (tuple, _) => new EquatableMetadataReference(tuple.Left, tuple.Right))
-            .Select(
-                static (equatableReference, ct) =>
-                    // SAFETY: nulls are filtered out in the subsequent step.
-                    ReferencedFunctors.GetFunctorsAndBehaviorFromReference(
-                        reference: equatableReference.Reference,
-                        compilation: equatableReference.Compilation,
-                        cancellationToken: ct)!)
+            .Select(static (equatableReference, ct) =>
+                // SAFETY: nulls are filtered out in the subsequent step.
+                ReferencedFunctors.GetFunctorsAndBehaviorFromReference(
+                    reference: equatableReference.Reference,
+                    compilation: equatableReference.Compilation,
+                    cancellationToken: ct)!)
             .Where(static x => x is not null)
             .Collect()
             .WithTrackingName("ReferencedFunctors");
@@ -127,15 +125,14 @@ public class TransformerGenerator : IIncrementalGenerator
         var allFunctorFullyQualifiedMetadataNames = functorCandidatesFromIntrinsicFunctors
             .Combine(functorCandidatesFromSyntax)
             .Combine(functorCandidatesFromReferences)
-            .SelectMany(
-                static (tuple, _) =>
-                {
-                    var ((intrinsic, syntax), refs) = tuple;
-                    return intrinsic
-                        .Concat(syntax)
-                        .Concat(refs)
-                        .Select(static c => c.FullyQualifiedMetadataName);
-                })
+            .SelectMany(static (tuple, _) =>
+            {
+                var ((intrinsic, syntax), refs) = tuple;
+                return intrinsic
+                    .Concat(syntax)
+                    .Concat(refs)
+                    .Select(static c => c.FullyQualifiedMetadataName);
+            })
             .Collect()
             .Select(static (x, _) => x.ToImmutableHashSet())
             .WithComparer(ImmutableHashSetEqualityComparer<string>.Default);
@@ -163,7 +160,7 @@ public class TransformerGenerator : IIncrementalGenerator
                         return new FunctorImplementationLocator(
                             FunctorFullyQualifiedMetadataName: symbol.Parameters.First()
                                 .Type.GetFullyQualifiedMetadataName(),
-                            Namespace: symbol.ContainingNamespace.ToString());
+                            Namespace: symbol.ContainingNamespace.ToNonGlobalDisplayName());
                     })
                 .Where(static x => x is not null)
                 .Collect()
@@ -172,15 +169,14 @@ public class TransformerGenerator : IIncrementalGenerator
         // Functor `Map` implementations found in referenced assemblies.
         var functorImplementationLocatorsFromReferences = referencedFunctors
             .Combine(allFunctorFullyQualifiedMetadataNames)
-            .SelectMany(
-                static (tuple, ct) =>
-                {
-                    var (referencedFunctors, allFunctorFullyQualifiedMetadataNames) = tuple;
-                    return FilterLocatorsBasedOnKnownFunctors(
-                        referencedFunctors,
-                        allFunctorFullyQualifiedMetadataNames,
-                        ct);
-                })
+            .SelectMany(static (tuple, ct) =>
+            {
+                var (referencedFunctors, allFunctorFullyQualifiedMetadataNames) = tuple;
+                return FilterLocatorsBasedOnKnownFunctors(
+                    referencedFunctors,
+                    allFunctorFullyQualifiedMetadataNames,
+                    ct);
+            })
             .Collect();
 
         // Combine all functor implementation locators.
@@ -195,65 +191,59 @@ public class TransformerGenerator : IIncrementalGenerator
             .Combine(functorCandidatesFromIntrinsicFunctors)
             .Combine(functorCandidatesFromReferences)
             .Combine(functorImplementationLocators)
-            .SelectMany(
-                static (input, _) =>
+            .SelectMany(static (input, _) =>
+            {
+                var (((syntax, intrinsic), refs), functorImplementationLocators) = input;
+                var candidates = syntax.Concat(intrinsic).Concat(refs);
+                var result = new List<Functor>(capacity: syntax.Length + intrinsic.Length + refs.Length);
+                foreach (var functorCandidate in candidates)
                 {
-                    var (((syntax, intrinsic), refs), functorImplementationLocators) = input;
-                    var candidates = syntax.Concat(intrinsic).Concat(refs);
-                    var result = new List<Functor>(
-                        capacity: syntax.Length + intrinsic.Length + refs.Length);
-                    foreach (var functorCandidate in candidates)
+                    var functorImplementation =
+                        functorImplementationLocators
+                            .FirstOrDefault(t => t.FunctorFullyQualifiedMetadataName ==
+                                                 functorCandidate.FullyQualifiedMetadataName);
+                    if (functorImplementation is null)
                     {
-                        var namespaceForFunctorImplementation =
-                            functorImplementationLocators
-                                .FirstOrDefault(
-                                    t => t.FunctorFullyQualifiedMetadataName ==
-                                         functorCandidate.FullyQualifiedMetadataName)
-                                ?.Namespace;
-                        if (namespaceForFunctorImplementation is null)
-                        {
-                            continue;
-                        }
-
-                        result.Add(functorCandidate.ToFunctor(namespaceForFunctorImplementation));
+                        continue;
                     }
 
-                    return result;
-                })
+                    result.Add(functorCandidate.ToFunctor(functorImplementation.Namespace));
+                }
+
+                return result;
+            })
             .Collect();
 
         // Construct transformer sets.
         var transformerSets = allOuterFunctors.Combine(methodsByFunctor)
-            .SelectMany(
-                static (tuple, ct) =>
+            .SelectMany(static (tuple, ct) =>
+            {
+                var (allOuterFunctors, functorMethods) = tuple;
+
+                // Methods grouped by their functor.
+                var methodsByFunctor = functorMethods
+                    .GroupBy(static m => (
+                        Functor: m.Functor.Name,
+                        FullFunctorMetadataName: m.Functor.FullyQualifiedMetadataName,
+                        Namespace: m.Functor.ContainingNamespace))
+                    .ToImmutableList();
+
+                var result = new List<TransformerSet>(capacity: methodsByFunctor.Count);
+                foreach (var methodGroup in methodsByFunctor)
                 {
-                    var (allOuterFunctors, functorMethods) = tuple;
+                    ct.ThrowIfCancellationRequested();
+                    var transformerSet = TransformerSet.Create(
+                        allOuterContainers: allOuterFunctors,
+                        functorName: methodGroup.Key.Functor,
+                        fullFunctorMetadataName: methodGroup.Key.FullFunctorMetadataName,
+                        functorNamespace: methodGroup.Key.Namespace,
+                        methods: methodGroup.ToImmutableList(),
+                        cancellationToken: ct);
+                    result.Add(transformerSet);
+                }
 
-                    // Methods grouped by their functor.
-                    var methodsByFunctor = functorMethods
-                        .GroupBy(
-                            static m => (
-                                Functor: m.Functor.Name,
-                                FullFunctorMetadataName: m.Functor.FullyQualifiedMetadataName,
-                                Namespace: m.Functor.ContainingNamespace))
-                        .ToImmutableList();
-
-                    var result = new List<TransformerSet>(capacity: methodsByFunctor.Count);
-                    foreach (var methodGroup in methodsByFunctor)
-                    {
-                        ct.ThrowIfCancellationRequested();
-                        var transformerSet = TransformerSet.Create(
-                            allOuterContainers: allOuterFunctors,
-                            functorName: methodGroup.Key.Functor,
-                            fullFunctorMetadataName: methodGroup.Key.FullFunctorMetadataName,
-                            functorNamespace: methodGroup.Key.Namespace,
-                            methods: methodGroup.ToImmutableList(),
-                            cancellationToken: ct);
-                        result.Add(transformerSet);
-                    }
-
-                    return result;
-                });
+                return result;
+            });
 
         // Generate the transformers.
         context.RegisterSourceOutput(

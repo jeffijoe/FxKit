@@ -36,7 +36,7 @@ internal static class Helpers
     public const string CSharpTaskMonad = "Task";
 
     /// <summary>
-    ///     Checks whether the specified <paramref name="reference"/>
+    ///     Checks whether the specified <paramref name="reference" />
     ///     contains functor definitions and/or `Map` implementations by scanning for the
     ///     assembly-level `ContainsFunctor` attribute.
     /// </summary>
@@ -102,8 +102,10 @@ internal static class Helpers
     /// <param name="containingNamespace"></param>
     /// <param name="typeName"></param>
     /// <returns></returns>
-    public static string FullyQualifiedName(string containingNamespace, string typeName) =>
-        $"{containingNamespace}.{typeName}";
+    public static string FullyQualifiedName(string? containingNamespace, string typeName) =>
+        containingNamespace is null
+            ? typeName
+            : $"{containingNamespace}.{typeName}";
 
     /// <summary>
     ///     Checks a compilation reference for whether it contains any functors.

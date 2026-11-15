@@ -24,7 +24,6 @@ internal static class TransformerClassBuilder
     {
         var transformerMethods = new List<MethodDeclarationSyntax>();
 
-        var namespaceDecl = NamespaceDeclaration(IdentifierName(transformerSet.FunctorNamespace));
         var classDecl = ClassDeclaration(transformerSet.GeneratedClassName)
             .WithModifiers(
                 TokenList(
@@ -45,8 +44,8 @@ internal static class TransformerClassBuilder
                 .WithParameterList(ComputeTransformerParameters(methodDescriptor))
                 .WithConstraintClauses(
                     List(
-                        methodDescriptor.TypeParameterConstraints.SelectNotNull(
-                            static t => t.ToConstraintClauseSyntax())))
+                        methodDescriptor.TypeParameterConstraints.SelectNotNull(static t =>
+                            t.ToConstraintClauseSyntax())))
                 .WithExpressionBody(ComputeTransformerExpressionBody(methodDescriptor))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                 .WithLeadingTrivia(
@@ -68,12 +67,16 @@ internal static class TransformerClassBuilder
 
         var usings = transformerSet.RequiredNamespaces
             .Select(n => UsingDirective(IdentifierName(n)));
-        var @namespace = namespaceDecl.AddMembers(classDecl.AddMembers([..transformerMethods]))
-            .WithLeadingTrivia(new SyntaxTriviaList(nullableEnabledTrivia));
+        classDecl = classDecl.AddMembers([.. transformerMethods]);
+        MemberDeclarationSyntax member = transformerSet.FunctorNamespace is null
+            ? classDecl
+            : NamespaceDeclaration(IdentifierName(transformerSet.FunctorNamespace))
+                .AddMembers(classDecl);
+        member = member.WithLeadingTrivia(nullableEnabledTrivia);
 
         var compilationUnit = CompilationUnit()
-            .WithUsings(new SyntaxList<UsingDirectiveSyntax>(usings))
-            .WithMembers(new SyntaxList<MemberDeclarationSyntax>(@namespace));
+            .WithUsings([.. usings])
+            .WithMembers([member]);
 
         return (classDecl.Identifier.ToString(), compilationUnit);
     }
@@ -92,16 +95,15 @@ internal static class TransformerClassBuilder
             .WithModifiers(TokenList(Token(SyntaxKind.ThisKeyword)));
 
         var parameters = method.Parameters
-            .Select(
-                static p =>
-                {
-                    var parameter = Parameter(Identifier(p.Name))
-                        .WithType(ParseTypeName(p.TypeFullName));
+            .Select(static p =>
+            {
+                var parameter = Parameter(Identifier(p.Name))
+                    .WithType(ParseTypeName(p.TypeFullName));
 
-                    return p.Default is not null
-                        ? parameter.WithDefault(EqualsValueClause(ParseExpression(p.Default)))
-                        : parameter;
-                });
+                return p.Default is not null
+                    ? parameter.WithDefault(EqualsValueClause(ParseExpression(p.Default)))
+                    : parameter;
+            });
 
         return ParameterList(SeparatedList(SingletonList(thisParameter).Concat(parameters)));
     }
