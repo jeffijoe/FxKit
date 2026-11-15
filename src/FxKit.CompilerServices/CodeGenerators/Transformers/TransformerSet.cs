@@ -50,8 +50,8 @@ internal sealed record TransformerSet(
         var methodGroupFunctorFullyQualifiedName = FullyQualifiedName(
             functorNamespace,
             functorName);
-        var outerContainers = allOuterContainers.Where(
-            o => o.FullyQualifiedName != methodGroupFunctorFullyQualifiedName);
+        var outerContainers =
+            allOuterContainers.Where(o => o.FullyQualifiedName != methodGroupFunctorFullyQualifiedName);
 
         foreach (var outer in outerContainers)
         {
@@ -144,7 +144,9 @@ internal sealed record TransformerSet(
             HintName: fullFunctorMetadataName,
             GeneratedClassName: $"{functorName}T",
             FunctorNamespace: functorNamespace,
-            RequiredNamespaces: namespaceList.OrderBy(static x => x).ToEquatableArray(),
+            RequiredNamespaces: namespaceList
+                .OrderBy(static x => x, StringComparer.InvariantCulture)
+                .ToEquatableArray(),
             MethodsWithCollidingTypeParameters: methodsWithCollidingTypeParams.ToEquatableArray(),
             TransformerMethods: transformerMethods.ToEquatableArray());
     }
@@ -336,7 +338,7 @@ internal sealed record FunctorTransformerMethodDescriptor(
         requiresFlattening = true;
         return new ConstructedFunctor(
             FunctorName: CSharpTaskMonad,
-            TypeArguments: new []
+            TypeArguments: new[]
             {
                 firstTypeArgument.TypeArguments[0]
             }.ToEquatableArray());
@@ -353,30 +355,28 @@ internal sealed record ConstructedFunctor(
     EquatableArray<ConcreteOrConstructedType> TypeArguments)
 {
     /// <summary>
-    ///     Creates a <see cref="GenericNameSyntax"/> from this constructed functor.
+    ///     Creates a <see cref="GenericNameSyntax" /> from this constructed functor.
     /// </summary>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public GenericNameSyntax ToGenericNameSyntax()
     {
         var args = SeparatedList(
-            TypeArguments.Select(
-                static t => t switch
-                {
-                    ConcreteOrConstructedType.Concrete(var type) =>
-                        type.ToTypeSyntax(),
-                    ConcreteOrConstructedType.Constructed(var type) =>
-                        type.ToTypeSyntax(),
-                    _ => throw new ArgumentOutOfRangeException(nameof(t))
-                }));
+            TypeArguments.Select(static t => t switch
+            {
+                ConcreteOrConstructedType.Concrete(var type) =>
+                    type.ToTypeSyntax(),
+                ConcreteOrConstructedType.Constructed(var type) =>
+                    type.ToTypeSyntax(),
+                _ => throw new ArgumentOutOfRangeException(nameof(t))
+            }));
 
         return GenericName(FunctorName).WithTypeArgumentList(TypeArgumentList(args));
     }
 
     /// <summary>
-    ///     Creates a <see cref="ConstructedFunctor"/> by constructing a concrete functor type
-    ///     using the given <paramref name="inner"/> type.
-    ///
+    ///     Creates a <see cref="ConstructedFunctor" /> by constructing a concrete functor type
+    ///     using the given <paramref name="inner" /> type.
     ///     For example, given an outer functor <c>Result&lt;T, E&gt;</c> and inner type <c>Option&lt;T&gt;</c>,
     ///     returns <c>Result&lt;Option&lt;T&gt;, E&gt;</c>.
     /// </summary>
