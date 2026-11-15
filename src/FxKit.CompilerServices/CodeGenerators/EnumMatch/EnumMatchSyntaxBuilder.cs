@@ -19,8 +19,14 @@ internal static class EnumMatchSyntaxBuilder
         writer.WriteLine(SourceGenerationHelper.NullableEnabledDirective);
         writer.WriteLine("using System;");
         writer.WriteLine();
-        writer.WriteLine($"namespace {enumGeneration.ContainingNamespace};\n");
-        writer.WriteLine($"{enumGeneration.Accessibility} static partial class {enumGeneration.Name}MatchExtension");
+
+        if (enumGeneration.ContainingNamespace is not null)
+        {
+            writer.WriteLine($"namespace {enumGeneration.ContainingNamespace};\n");
+        }
+
+        writer.WriteLine(
+            $"{enumGeneration.Accessibility} static partial class {enumGeneration.Name}MatchExtension");
         using (writer.WriteBlock())
         {
             WriteMatchFunction(writer, enumGeneration, func: true);

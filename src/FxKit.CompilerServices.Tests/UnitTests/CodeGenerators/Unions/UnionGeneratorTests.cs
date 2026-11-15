@@ -29,6 +29,23 @@ public class UnionGeneratorTests
     }
 
     [Test]
+    public async Task SupportsGlobalNamespace()
+    {
+        var output = Generate(
+            """
+            using System.Collections.Generic;
+            using FxKit.CompilerServices;
+
+            [Union]
+            public partial record UnionInGlobalNamespace
+            {
+                partial record ItWorks(string Cool);
+            }
+            """);
+        await output.VerifyGeneratedCode();
+    }
+
+    [Test]
     public async Task SupportsNestedTypes()
     {
         var output = Generate(

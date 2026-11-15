@@ -29,11 +29,10 @@ public class LambdaGenerator : IIncrementalGenerator
         // Group them by their containing type's metadata name.
         var groupedByType = methodDescriptors
             .Collect()
-            .SelectMany(
-                (methods, _) => methods
-                    .SelectNotNull(static method => method)
-                    .GroupBy(static method => method.FullyQualifiedContainingTypeMetadataName)
-                    .Select(static g => new LambdaGenerationFile(g.Key, g.ToEquatableArray())))
+            .SelectMany((methods, _) => methods
+                .SelectNotNull(static method => method)
+                .GroupBy(static method => method.FullyQualifiedContainingTypeMetadataName)
+                .Select(static g => new LambdaGenerationFile(g.Key, g.ToEquatableArray())))
             .WithTrackingName("Grouped");
 
         // Generate.
@@ -75,7 +74,7 @@ public class LambdaGenerator : IIncrementalGenerator
 
             return new LambdaMethodDescriptor(
                 FullyQualifiedContainingTypeMetadataName: fullyQualifiedContainingTypeMetadataName,
-                Namespace: containingType.ContainingNamespace.ToDisplayString(),
+                Namespace: containingType.ContainingNamespace.ToNonGlobalDisplayName(),
                 TypeHierarchy: hierarchy,
                 Target: LambdaTarget.Method,
                 TypeOrMethodName: methodSymbol.Name,
@@ -91,8 +90,8 @@ public class LambdaGenerator : IIncrementalGenerator
                 typeSymbol.GetFullyQualifiedMetadataName();
 
             // Get parameters from the first public constructor.
-            var constructor = typeSymbol.InstanceConstructors.FirstOrDefault(
-                static c => c.DeclaredAccessibility == Accessibility.Public);
+            var constructor = typeSymbol.InstanceConstructors.FirstOrDefault(static c =>
+                c.DeclaredAccessibility == Accessibility.Public);
 
             if (constructor is null)
             {
@@ -107,7 +106,7 @@ public class LambdaGenerator : IIncrementalGenerator
 
             return new LambdaMethodDescriptor(
                 FullyQualifiedContainingTypeMetadataName: fullyQualifiedContainingTypeMetadataName,
-                Namespace: typeSymbol.ContainingNamespace.ToDisplayString(),
+                Namespace: typeSymbol.ContainingNamespace.ToNonGlobalDisplayName(),
                 TypeHierarchy: hierarchy,
                 Target: LambdaTarget.Constructor,
                 TypeOrMethodName: typeSymbol.Name,

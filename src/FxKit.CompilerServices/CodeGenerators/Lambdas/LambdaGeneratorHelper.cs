@@ -19,7 +19,7 @@ internal sealed record LambdaGenerationFile(
     /// <summary>
     ///     The namespace of the type containing the methods.
     /// </summary>
-    public string Namespace => Methods[0].Namespace;
+    public string? Namespace => Methods[0].Namespace;
 
     /// <summary>
     ///     The type hierarchy of the type containing the methods.
@@ -69,7 +69,7 @@ internal enum LambdaTarget
 /// </param>
 internal sealed record LambdaMethodDescriptor(
     string FullyQualifiedContainingTypeMetadataName,
-    string Namespace,
+    string? Namespace,
     EquatableArray<TypeHierarchyNode> TypeHierarchy,
     LambdaTarget Target,
     string TypeOrMethodName,

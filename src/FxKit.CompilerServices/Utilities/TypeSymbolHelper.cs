@@ -44,16 +44,18 @@ internal static class TypeSymbolHelper
     /// <returns></returns>
     public static string GetFullyQualifiedMetadataName(this ISymbol symbol)
     {
-        var ns = symbol.ContainingNamespace.ToDisplayString();
+        var namespacePrefix = symbol.ContainingNamespace.IsGlobalNamespace
+            ? string.Empty
+            : $"{symbol.ContainingNamespace.ToDisplayString()}.";
         if (symbol.ContainingType is null)
         {
             // Fast path - the symbol is not contained in another type.
-            return $"{ns}.{symbol.MetadataName}";
+            return $"{namespacePrefix}{symbol.MetadataName}";
         }
 
         // Check ancestry.
         var sb = new StringBuilder();
-        sb.Append($"{symbol.MetadataName}");
+        sb.Append(symbol.MetadataName);
 
         var parent = symbol.ContainingType;
         do
@@ -62,7 +64,7 @@ internal static class TypeSymbolHelper
             parent = parent.ContainingType;
         } while (parent != null);
 
-        sb.Insert(index: 0, $"{ns}.");
+        sb.Insert(index: 0, namespacePrefix);
         return sb.ToString();
     }
 
@@ -86,6 +88,7 @@ internal static class TypeSymbolHelper
                     yield return inner;
                 }
             }
+
             yield break;
         }
 
@@ -94,4 +97,14 @@ internal static class TypeSymbolHelper
             yield return nt;
         }
     }
+
+    /// <summary>
+    ///     Gets the namespace name as a string if it's not the global namespace.
+    /// </summary>
+    /// <param name="symbol"></param>
+    /// <returns></returns>
+    public static string? ToNonGlobalDisplayName(this INamespaceSymbol symbol) =>
+        symbol.IsGlobalNamespace
+            ? null
+            : symbol.ToDisplayString();
 }

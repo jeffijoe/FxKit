@@ -46,6 +46,26 @@ public class EnumMatchGeneratorTests
     }
 
     [Test]
+    public async Task SupportsGlobalNamespace()
+    {
+        var generated = Generate(
+            """
+            using System;
+            using FxKit.CompilerServices;
+
+            [EnumMatch]
+            public enum MyEnum
+            {
+                One,
+                Two,
+                Three
+            }
+            """);
+
+        await generated.VerifyGeneratedCode();
+    }
+
+    [Test]
     public async Task SupportsNestedTypes()
     {
         var generated = Generate(

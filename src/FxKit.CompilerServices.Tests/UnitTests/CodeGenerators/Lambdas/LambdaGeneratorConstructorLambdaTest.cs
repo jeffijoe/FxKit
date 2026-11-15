@@ -30,6 +30,27 @@ public class LambdaGeneratorConstructorLambdaTest
     }
 
     [Test]
+    public async Task SupportsGlobalNamespace()
+    {
+        const string InputSource =
+            """
+            using System.Collections.Generic;
+            using FxKit.CompilerServices;
+
+            [Lambda]
+            public partial record MyRecord(
+                string Param1,
+                int Param2,
+                List<string?> Param3
+            );
+            """;
+
+        var generated = Generate(InputSource);
+        generated.Should().NotBeNull();
+        await generated.VerifyGeneratedCode();
+    }
+
+    [Test]
     public async Task SupportsNestedTypes()
     {
         const string InputSource =

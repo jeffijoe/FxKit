@@ -100,7 +100,7 @@ public class UnionGenerator : IIncrementalGenerator
             UnionNameWithSignature: TypeHierarchyHelper.GetIdentifierWithSignature(recordDeclaration),
             HintName: recordSymbol.GetFullyQualifiedMetadataName(),
             HasGenericMembers: hasGenericMembers,
-            UnionNamespace: recordSymbol.ContainingNamespace.ToDisplayString(),
+            UnionNamespace: recordSymbol.ContainingNamespace.ToNonGlobalDisplayName(),
             AncestorTypeHierarchy: ancestorTypeHierarchy,
             Members: new EquatableArray<UnionMember>(constructors.ToArray()));
     }
@@ -120,8 +120,9 @@ public class UnionGenerator : IIncrementalGenerator
     {
         var symbol = semanticModel.GetDeclaredSymbol(recordDeclarationSyntax, cancellationToken);
 
-        var constructor = symbol?.InstanceConstructors.FirstOrDefault(
-            static c => c.DeclaredAccessibility == Accessibility.Public);
+        var constructor =
+            symbol?.InstanceConstructors.FirstOrDefault(static c =>
+                c.DeclaredAccessibility == Accessibility.Public);
         return constructor is null
             ? EquatableArray<BasicParameter>.Empty
             // First parameter is the type itself.
@@ -201,7 +202,7 @@ public class UnionGenerator : IIncrementalGenerator
 ///     The name of the union type, including any type parameters.
 /// </param>
 /// <param name="UnionNamespace">
-///     The containing namespace of the union.
+///     The containing namespace of the union. If <c>null</c>, the union is in the global namespace.
 /// </param>
 /// <param name="HintName">
 ///     A hint name used for the generated file.
@@ -220,7 +221,7 @@ internal record UnionGeneration(
     string Accessibility,
     string UnionName,
     string UnionNameWithSignature,
-    string UnionNamespace,
+    string? UnionNamespace,
     string HintName,
     bool HasGenericMembers,
     EquatableArray<TypeHierarchyNode> AncestorTypeHierarchy,
