@@ -70,7 +70,8 @@ public static partial class Validation
     public static Validation<IReadOnlyList<T>, E> Sequence<T, E>(
         this IEnumerable<Validation<T, E>> source)
         where T : notnull
-        where E : notnull => Traverse(source, Identity);
+        where E : notnull =>
+        source.Traverse(Identity);
 
     #endregion
 }

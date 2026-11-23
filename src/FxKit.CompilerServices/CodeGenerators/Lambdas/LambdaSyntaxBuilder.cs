@@ -5,7 +5,7 @@ using FxKit.CompilerServices.Utilities;
 namespace FxKit.CompilerServices.CodeGenerators.Lambdas;
 
 /// <summary>
-///     Syntax builder for the <see cref="LambdaGenerator"/>.
+///     Syntax builder for the <see cref="LambdaGenerator" />.
 /// </summary>
 internal static class LambdaSyntaxBuilder
 {
@@ -67,6 +67,7 @@ internal static class LambdaSyntaxBuilder
                     {
                         writer.Write("?");
                     }
+
                     writer.Write(", ");
                 }
 

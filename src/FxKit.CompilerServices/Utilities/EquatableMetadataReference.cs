@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis;
 namespace FxKit.CompilerServices.Utilities;
 
 /// <summary>
-///     An equatable <see cref="MetadataReference"/> that weakly references a <see cref="Compilation"/>.
+///     An equatable <see cref="MetadataReference" /> that weakly references a <see cref="Compilation" />.
 ///     Requires that retrieving the compilation is performed immediately following a
-///     change to the <see cref="MetadataReference"/> in order to guarantee
-///     the <see cref="Compilation"/> has not yet been garbage-collected.
+///     change to the <see cref="MetadataReference" /> in order to guarantee
+///     the <see cref="Compilation" /> has not yet been garbage-collected.
 /// </summary>
 public sealed class EquatableMetadataReference(
     MetadataReference reference,
@@ -50,7 +50,7 @@ public sealed class EquatableMetadataReference(
         }
 
         // Only PE references can be checked for equality; others are assumed not equal.
-        if (this.Reference is not PortableExecutableReference left ||
+        if (Reference is not PortableExecutableReference left ||
             other.Reference is not PortableExecutableReference right)
         {
             return false;

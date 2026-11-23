@@ -108,26 +108,26 @@ public static partial class Option
         where T : notnull => source.Traverse(Identity);
 
     /// <summary>
-    /// Attempts to aggregate a sequence of values using a specified function
-    /// that may return an optional result, starting with an initial seed value.
+    ///     Attempts to aggregate a sequence of values using a specified function
+    ///     that may return an optional result, starting with an initial seed value.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
     /// <typeparam name="TAccumulate">The type of the accumulator value.</typeparam>
     /// <param name="source">The sequence of elements to aggregate.</param>
     /// <param name="seed">The initial value for the accumulator.</param>
     /// <param name="func">
-    /// A function that takes the current accumulator value and an element from
-    /// the sequence, returning an <see cref="Option{T}"/> containing either
-    /// the new accumulator value or no value.
+    ///     A function that takes the current accumulator value and an element from
+    ///     the sequence, returning an <see cref="Option{T}" /> containing either
+    ///     the new accumulator value or no value.
     /// </param>
     /// <returns>
-    /// An <see cref="Option{T}"/> containing the final accumulated value if the operation succeeds
-    /// for all elements, or <see cref="Option.None"/> if the aggregation fails at any step.
+    ///     An <see cref="Option{T}" /> containing the final accumulated value if the operation succeeds
+    ///     for all elements, or <see cref="Option.None" /> if the aggregation fails at any step.
     /// </returns>
     /// <remarks>
-    /// This method iteratively applies the specified function to the accumulator and each
-    /// element of the source sequence. If the function returns <see cref="Option.None"/>
-    /// at any step, the aggregation stops and the method returns <see cref="Option.None"/>.
+    ///     This method iteratively applies the specified function to the accumulator and each
+    ///     element of the source sequence. If the function returns <see cref="Option.None" />
+    ///     at any step, the aggregation stops and the method returns <see cref="Option.None" />.
     /// </remarks>
     [GenerateTransformer]
     public static Option<TAccumulate> TryAggregate<T, TAccumulate>(

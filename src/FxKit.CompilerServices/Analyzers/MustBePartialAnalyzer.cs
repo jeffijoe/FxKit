@@ -71,7 +71,7 @@ public class MustBePartialAnalyzer : DiagnosticAnalyzer
         var nodesMissingPartial =
             typeDecl.AncestorsAndSelf()
                 .OfType<TypeDeclarationSyntax>()
-                .Where(static t => t.Modifiers.Any(SyntaxKind.PartialKeyword) == false)
+                .Where(static t => !t.Modifiers.Any(SyntaxKind.PartialKeyword))
                 .ToArray();
 
         // The type and it's ancestry is partial, so we can exit now.

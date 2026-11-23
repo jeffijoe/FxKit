@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FxKit is a functional programming library for C# that provides railway-oriented programming patterns using abstract data types like `Result`, `Option`, and `Validation`. It includes Roslyn-based analyzers and source generators for compile-time code generation of union types, exhaustive match patterns, and more.
+FxKit is a functional programming library for C# that provides railway-oriented programming patterns using abstract data
+types like `Result`, `Option`, and `Validation`. It includes Roslyn-based analyzers and source generators for
+compile-time code generation of union types, exhaustive match patterns, and more.
 
 ## Development Commands
 
@@ -63,7 +65,8 @@ The solution contains four main projects:
 
 1. **FxKit** - Core library with functional data types (`Option<T>`, `Result<TOk, TErr>`, `Validation<T, TErr>`)
 2. **FxKit.CompilerServices** - Roslyn analyzers and source generators for compile-time code generation
-3. **FxKit.CompilerServices.Annotations** - Attributes used to trigger source generation (`[Union]`, `[Lambda]`, `[Functor]`, etc.)
+3. **FxKit.CompilerServices.Annotations** - Attributes used to trigger source generation (`[Union]`, `[Lambda]`,
+   `[Functor]`, etc.)
 4. **FxKit.Testing** - FluentAssertions extensions for testing FxKit types
 
 ### Key Architectural Patterns
@@ -82,9 +85,12 @@ The library centers around functional programming patterns with immutable data t
 The `FxKit.CompilerServices` project uses Roslyn's IIncrementalGenerator API to generate code at compile time:
 
 1. **Union Generator** (`UnionGenerator.cs`): Creates discriminated unions from partial records marked with `[Union]`
-2. **Lambda Generator** (`LambdaGenerator.cs`): Generates lambda expressions for methods and constructors marked with `[Lambda]`
-3. **Transformer Generator** (`TransformerGenerator.cs`): Creates transformer classes for functors marked with `[GenerateTransformer]`
-4. **EnumMatch Generator** (`EnumMatchGenerator.cs`): Generates exhaustive match extension methods for enums marked with `[EnumMatch]`
+2. **Lambda Generator** (`LambdaGenerator.cs`): Generates lambda expressions for methods and constructors marked with
+   `[Lambda]`
+3. **Transformer Generator** (`TransformerGenerator.cs`): Creates transformer classes for functors marked with
+   `[GenerateTransformer]`
+4. **EnumMatch Generator** (`EnumMatchGenerator.cs`): Generates exhaustive match extension methods for enums marked with
+   `[EnumMatch]`
 
 Each generator follows a pipeline pattern:
 

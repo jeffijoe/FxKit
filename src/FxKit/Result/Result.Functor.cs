@@ -113,7 +113,9 @@ public static partial class Result
 
         [DebuggerHidden]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static async Task<Result<TOk, TNewErr>> HandleErr(TErr err, Func<TErr, Task<TNewErr>> selector) =>
+        static async Task<Result<TOk, TNewErr>> HandleErr(
+            TErr err,
+            Func<TErr, Task<TNewErr>> selector) =>
             Result<TOk, TNewErr>.Err(await selector(err).ConfigureAwait(false));
     }
 
@@ -125,5 +127,5 @@ public static partial class Result
         this Result<TOk, TErr> source,
         Func<TOk, TNewOk> selector)
         where TNewOk : notnull where TErr : notnull where TOk : notnull =>
-        Map(source, selector);
+        source.Map(selector);
 }

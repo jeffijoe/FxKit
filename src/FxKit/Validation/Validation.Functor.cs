@@ -152,7 +152,7 @@ public static partial class Validation
         this Validation<TValid, TInvalid> source,
         Func<TValid, TNewValid> selector)
         where TNewValid : notnull where TInvalid : notnull where TValid : notnull =>
-        Map(source, selector);
+        source.Map(selector);
 
     #endregion
 }

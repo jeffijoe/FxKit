@@ -66,7 +66,7 @@ public static partial class Validation
         where TInvalid : notnull
         where TNewValid : notnull
         where TValid : notnull =>
-        FlatMap(source, selector);
+        source.FlatMap(selector);
 
     /// <summary>
     ///     Allows using LINQ.

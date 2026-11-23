@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.[cf]sproj') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.[cf]sproj', '**/Directory.Packages.props', '.config/dotnet-tools.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
@@ -51,11 +51,16 @@ jobs:
           restore-keys: |
             fxkit-resharper-cache-
 
-      # Lint
+      - name: Restore ReSharper tool
+        working-directory: ./src
+        run: dotnet tool restore
+
+      - name: Restore solution dependencies
+        working-directory: ./src
+        run: dotnet restore
+
       - name: "Run ReSharper"
-        run: |
-          cd src && dotnet tool restore && dotnet restore &&
-          cd .. && ./scripts/inspect-code.sh
+        run: ./scripts/inspect-code.sh
         env:
           CACHE_DIR: /tmp/fxkit_resharper_cache
 

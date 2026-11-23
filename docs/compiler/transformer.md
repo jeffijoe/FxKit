@@ -18,7 +18,8 @@ Result<Option<int>, string> mapped = result.MapT(x => x.Length);
 ## How it works
 
 Transformers work on the basis of [functors][functors]. These are types that wrap another generic type, and they
-provide a function called `fmap` subject to certain laws which allows us to transform the type of `T` to another type but without losing the
+provide a function called `fmap` subject to certain laws which allows us to transform the type of `T` to another type
+but without losing the
 outer type. In C#, `Select` is the canonical equivalent to `fmap`.
 
 For example, `IEnumerable<T>` is a functor because it provides a `Select<T, U>` that lets us transform
@@ -27,10 +28,12 @@ an `IEnumerable<T>` to an `IEnumerable<U>`.
 ::: tip
 FxKit supplies both `Map` and `Select`, but they do the same thing. The former is nicer to use
 when chaining, and the latter enables using LINQ like
+
 ```csharp
 from x in functor
 select x
 ```
+
 :::
 
 When working with stacked functors (for example, `IEnumerable<Option<T>>`), if you want to map the `T`, you
@@ -59,6 +62,7 @@ FxKit already ships with transformer methods generated for the functors it defin
 ## Generating transformers
 
 To generate transformers for your own types, the type must satisfy the following:
+
 1. It must be marked as a `[Functor]`.
 2. It must provide an implementation of `Map` in the form of an extension method.
 3. There must be no [type parameter collision](#type-parameter-collision).
@@ -81,6 +85,7 @@ public static class Box
 ```
 
 Now you can add `[GenerateTransformer]` to any method that fits the following criteria:
+
 1. Is an extension method.
 2. The first parameter is the type (functor).
 
@@ -179,7 +184,6 @@ public static Result<Validation<R, E>, E> MapT<T, E, R, E>(
 ::: tip
 The generator will spot the collision and report it as a diagnostic with ID `FXKIT0008`.
 :::
-
 
 To get around this, the FxKit types which have multiple type parameters use a contextual suffix for their
 type parameter names:

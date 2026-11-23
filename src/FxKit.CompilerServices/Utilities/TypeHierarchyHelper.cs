@@ -27,11 +27,10 @@ internal static class TypeHierarchyHelper
         bool includeSelf = false) =>
         (includeSelf ? node.AncestorsAndSelf() : node.Ancestors())
         .OfType<TypeDeclarationSyntax>()
-        .Select(
-            static n => new TypeHierarchyNode(
-                Modifiers: n.Modifiers.ToString(),
-                Keyword: n.Keyword.ValueText,
-                IdentifierWithSignature: GetIdentifierWithSignature(n)))
+        .Select(static n => new TypeHierarchyNode(
+            Modifiers: n.Modifiers.ToString(),
+            Keyword: n.Keyword.ValueText,
+            IdentifierWithSignature: GetIdentifierWithSignature(n)))
         .Reverse()
         .ToEquatableArray();
 
@@ -52,8 +51,8 @@ internal static class TypeHierarchyHelper
         }
 
         var typeParams =
-            typeDeclarationSyntax.TypeParameterList.Parameters.Select(
-                static p => p.Identifier.ValueText);
+            typeDeclarationSyntax.TypeParameterList.Parameters.Select(static p =>
+                p.Identifier.ValueText);
         var typeParamsJoined = string.Join(", ", typeParams);
         return $"{typeDeclarationSyntax.Identifier}<{typeParamsJoined}>";
     }

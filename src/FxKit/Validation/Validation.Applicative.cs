@@ -455,6 +455,5 @@ public static partial class Validation
         where T1 : notnull
         => source.Map(f => f.CurryFirst()).Apply(arg);
 
-
     #endregion
 }

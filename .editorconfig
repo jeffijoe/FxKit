@@ -413,8 +413,9 @@ indent_size = 4
 insert_final_newline = true
 
 # XML project files
-[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
-indent_size = 2 # A property with the same name was updated with a value 4 in a section [*.{appxmanifest,asax,ascx,aspx,axaml,build,cg,cginc,compute,cs,cshtml,dtd,fs,fsi,fsscript,fsx,hlsl,hlsli,hlslinc,master,ml,mli,nuspec,paml,razor,resw,resx,shader,skin,usf,ush,vb,xaml,xamlx,xoml,xsd}]
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj,props,targets}]
+indent_size = 2
+ij_xml_space_inside_empty_tag = true
 
 # CSharp code style settings:
 [*.cs]
@@ -550,6 +551,7 @@ csharp_style_expression_bodied_operators = true:none
 csharp_style_expression_bodied_properties = true:none
 csharp_style_expression_bodied_indexers = true:none
 csharp_style_expression_bodied_accessors = true:none
+resharper_csharp_accessor_owner_body = expression_body
 
 # Suggest more modern language features when available
 csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
@@ -615,3 +617,9 @@ indent_size = 1
 [*.{ts,mts,json}]
 indent_size = 2
 insert_final_newline = false
+
+# Prettier formats the docs site.
+[docs/**]
+ij_formatter_enabled = false
+resharper_substitution_for_cleanup_profile =
+* = > skip

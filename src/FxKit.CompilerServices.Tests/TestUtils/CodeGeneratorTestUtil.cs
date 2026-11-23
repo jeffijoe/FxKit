@@ -61,7 +61,9 @@ public static class CodeGeneratorTestUtil
     /// <param name="generator"></param>
     /// <param name="compilation"></param>
     /// <returns></returns>
-    public static string GetGeneratedOutput(IIncrementalGenerator generator, CSharpCompilation compilation)
+    public static string GetGeneratedOutput(
+        IIncrementalGenerator generator,
+        CSharpCompilation compilation)
     {
         CSharpGeneratorDriver.Create(generator)
             .RunGeneratorsAndUpdateCompilation(

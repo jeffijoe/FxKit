@@ -9,14 +9,14 @@ namespace FxKit;
 public static partial class Option
 {
     /// <summary>
-    /// Returns a result containing the value from an <see cref="Option{T}"/> if it exists.
-    /// Otherwise, returns a result with the specified error value.
+    ///     Returns a result containing the value from an <see cref="Option{T}" /> if it exists.
+    ///     Otherwise, returns a result with the specified error value.
     /// </summary>
     /// <typeparam name="T">The type of the value in the result.</typeparam>
     /// <typeparam name="R">The type of the error in the result.</typeparam>
-    /// <param name="source">The input <see cref="Option{T}"/>.</param>
+    /// <param name="source">The input <see cref="Option{T}" />.</param>
     /// <param name="selector">A function that provides the error value to return if the option is empty.</param>
-    /// <returns>A <see cref="Result{TOk,TErr}"/> containing either the value or the specified error.</returns>
+    /// <returns>A <see cref="Result{TOk,TErr}" /> containing either the value or the specified error.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]
@@ -30,14 +30,14 @@ public static partial class Option
             : Result<T, R>.Err(selector());
 
     /// <summary>
-    /// Returns a result containing the value from an <see cref="Option{T}"/> if it exists.
-    /// Otherwise, returns a result with the specified error value.
+    ///     Returns a result containing the value from an <see cref="Option{T}" /> if it exists.
+    ///     Otherwise, returns a result with the specified error value.
     /// </summary>
     /// <typeparam name="T">The type of the value in the result.</typeparam>
     /// <typeparam name="R">The type of the error in the result.</typeparam>
-    /// <param name="source">The input <see cref="Option{T}"/>.</param>
+    /// <param name="source">The input <see cref="Option{T}" />.</param>
     /// <param name="invalidValue">The error value to return if the option is empty.</param>
-    /// <returns>A <see cref="Result{TOk,TErr}"/> containing either the value or the specified error.</returns>
+    /// <returns>A <see cref="Result{TOk,TErr}" /> containing either the value or the specified error.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]

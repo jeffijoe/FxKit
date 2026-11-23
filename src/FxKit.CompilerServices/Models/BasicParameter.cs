@@ -13,7 +13,7 @@ namespace FxKit.CompilerServices.Models;
 /// </param>
 /// <param name="RequiresAdditionalNullableAnnotation">
 ///     Whether the parameter requires printing an additional `?`.
-///     This may be false in case the <see cref="FullyQualifiedTypeName"/> already includes
+///     This may be false in case the <see cref="FullyQualifiedTypeName" /> already includes
 ///     the `?`, such as for value types.
 /// </param>
 internal sealed record BasicParameter(

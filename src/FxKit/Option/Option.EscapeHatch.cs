@@ -12,11 +12,11 @@ public static partial class Option
     ///     Matches on the value held within the <see cref="Option{T}" />.
     /// </summary>
     /// <param name="source"></param>
-    /// <param name="Some">A function to invoke if the <see cref="Option{T}"/> has a value.</param>
-    /// <param name="None">A function to invoke if the <see cref="Option{T}"/> is empty.</param>
+    /// <param name="Some">A function to invoke if the <see cref="Option{T}" /> has a value.</param>
+    /// <param name="None">A function to invoke if the <see cref="Option{T}" /> is empty.</param>
     /// <typeparam name="R">The return type of the match functions.</typeparam>
-    /// <typeparam name="T">The type of the value contained in the <see cref="Option{T}"/>.</typeparam>
-    /// <returns>The result of invoking the <paramref name="Some"/> or the <paramref name="None"/> function.</returns>
+    /// <typeparam name="T">The type of the value contained in the <see cref="Option{T}" />.</typeparam>
+    /// <returns>The result of invoking the <paramref name="Some" /> or the <paramref name="None" /> function.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]
@@ -135,10 +135,10 @@ public static partial class Option
         where T : notnull => source.TryGet(out var value) ? value : fallback();
 
     /// <summary>
-    /// Returns the values from a sequence of <see cref="Option{T}"/> where the option has a value.
+    ///     Returns the values from a sequence of <see cref="Option{T}" /> where the option has a value.
     /// </summary>
-    /// <param name="source">The input sequence of <see cref="Option{T}"/>.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> containing the values from the options with values.</returns>
+    /// <param name="source">The input sequence of <see cref="Option{T}" />.</param>
+    /// <returns>An <see cref="IEnumerable{T}" /> containing the values from the options with values.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]
@@ -156,10 +156,10 @@ public static partial class Option
     }
 
     /// <summary>
-    /// Returns the values from a list of <see cref="Option{T}"/> where the option has a value.
+    ///     Returns the values from a list of <see cref="Option{T}" /> where the option has a value.
     /// </summary>
-    /// <param name="source">The input list of <see cref="Option{T}"/>.</param>
-    /// <returns>An <see cref="IReadOnlyList{T}"/> containing the values from the options with values.</returns>
+    /// <param name="source">The input list of <see cref="Option{T}" />.</param>
+    /// <returns>An <see cref="IReadOnlyList{T}" /> containing the values from the options with values.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]
@@ -180,14 +180,14 @@ public static partial class Option
     }
 
     /// <summary>
-    /// Returns the values from a sequence of <see cref="Option{T}"/> where the option has a value.
-    /// Applies a selector function to each value and returns the results.
+    ///     Returns the values from a sequence of <see cref="Option{T}" /> where the option has a value.
+    ///     Applies a selector function to each value and returns the results.
     /// </summary>
     /// <typeparam name="T">The type of the value in the option.</typeparam>
     /// <typeparam name="U">The type of the result after applying the selector function.</typeparam>
-    /// <param name="source">The input sequence of <see cref="Option{T}"/>.</param>
+    /// <param name="source">The input sequence of <see cref="Option{T}" />.</param>
     /// <param name="selector">The selector function to apply to each value.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> containing the results of applying the selector function to the values.</returns>
+    /// <returns>An <see cref="IEnumerable{T}" /> containing the results of applying the selector function to the values.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]
@@ -206,14 +206,14 @@ public static partial class Option
     }
 
     /// <summary>
-    /// Returns the values from a list of <see cref="Option{T}"/> where the option has a value.
-    /// Applies a selector function to each value and returns the results.
+    ///     Returns the values from a list of <see cref="Option{T}" /> where the option has a value.
+    ///     Applies a selector function to each value and returns the results.
     /// </summary>
     /// <typeparam name="T">The type of the value in the option.</typeparam>
     /// <typeparam name="U">The type of the result after applying the selector function.</typeparam>
-    /// <param name="source">The input list of <see cref="Option{T}"/>.</param>
+    /// <param name="source">The input list of <see cref="Option{T}" />.</param>
     /// <param name="selector">The selector function to apply to each value.</param>
-    /// <returns>An <see cref="IReadOnlyList{T}"/> containing the results of applying the selector function to the values.</returns>
+    /// <returns>An <see cref="IReadOnlyList{T}" /> containing the results of applying the selector function to the values.</returns>
     [DebuggerHidden]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [GenerateTransformer]

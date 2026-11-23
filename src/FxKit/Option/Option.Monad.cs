@@ -98,7 +98,7 @@ public static partial class Option
         Func<T, Option<U>> selector)
         where T : notnull
         where U : notnull =>
-        FlatMap(source, selector);
+        source.FlatMap(selector);
 
     /// <summary>
     ///     Allows using LINQ.
