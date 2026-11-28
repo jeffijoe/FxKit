@@ -28,10 +28,7 @@ public partial class LambdaCompiledMethodTests
         {
             return
             [
-                ..new[]
-                {
-                    new MyClass<T>(arg, arg2)
-                }
+                new MyClass<T>(arg, arg2)
             ];
         }
     }

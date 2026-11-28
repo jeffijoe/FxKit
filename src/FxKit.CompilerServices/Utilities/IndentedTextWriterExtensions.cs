@@ -4,7 +4,7 @@ using FxKit.CompilerServices.Models;
 namespace FxKit.CompilerServices.Utilities;
 
 /// <summary>
-///     Extensions for <see cref="IndentedTextWriter"/>.
+///     Extensions for <see cref="IndentedTextWriter" />.
 /// </summary>
 internal static class IndentedTextWriterExtensions
 {

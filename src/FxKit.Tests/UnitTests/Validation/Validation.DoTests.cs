@@ -33,22 +33,20 @@ public class ValidationDoTests
     {
         var x = "unchanged";
         await Validation<string, string>.Valid("valid")
-            .DoAsync(
-                async v =>
-                {
-                    await Task.CompletedTask;
-                    x = v;
-                });
+            .DoAsync(async v =>
+            {
+                await Task.CompletedTask;
+                x = v;
+            });
         x.Should().Be("valid");
 
         var y = "unchanged";
         await Validation<string, string>.Invalid("error")
-            .DoAsync(
-                async _ =>
-                {
-                    await Task.CompletedTask;
-                    y = "changed";
-                });
+            .DoAsync(async _ =>
+            {
+                await Task.CompletedTask;
+                y = "changed";
+            });
         y.Should().Be("unchanged");
     }
 
@@ -57,22 +55,20 @@ public class ValidationDoTests
     {
         var x = "unchanged";
         await Validation<string, string>.Valid("valid")
-            .DoInvalidAsync(
-                async _ =>
-                {
-                    await Task.CompletedTask;
-                    x = "changed";
-                });
+            .DoInvalidAsync(async _ =>
+            {
+                await Task.CompletedTask;
+                x = "changed";
+            });
         x.Should().Be("unchanged");
 
         var y = "unchanged";
         await Validation<string, string>.Invalid("error")
-            .DoInvalidAsync(
-                async e =>
-                {
-                    await Task.CompletedTask;
-                    y = e.First();
-                });
+            .DoInvalidAsync(async e =>
+            {
+                await Task.CompletedTask;
+                y = e.First();
+            });
         y.Should().Be("error");
     }
 }

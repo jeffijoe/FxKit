@@ -24,7 +24,7 @@ public partial class Option
     }
 
     /// <summary>
-    /// Asynchronously runs <see cref="callback" /> if the <paramref name="source" /> is Some.
+    ///     Asynchronously runs <see cref="callback" /> if the <paramref name="source" /> is Some.
     /// </summary>
     [GenerateTransformer]
     public static async Task<Option<T>> DoAsync<T>(this Option<T> source, Func<T, Task> callback)

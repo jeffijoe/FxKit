@@ -68,7 +68,7 @@ public static partial class Option
         Func<T, U> selector)
         where T : notnull
         where U : notnull =>
-        Map(source, selector);
+        source.Map(selector);
 
     #endregion
 }

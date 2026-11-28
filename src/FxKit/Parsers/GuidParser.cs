@@ -52,5 +52,5 @@ public static class GuidParser
     /// <param name="guid"></param>
     /// <returns></returns>
     private static Validation<Guid, GuidParseProblem> ValidateNotEmpty(Guid? guid) =>
-        guid.HasValue == false || guid.Value == Guid.Empty ? GuidParseProblem.Empty : guid.Value;
+        !guid.HasValue || guid.Value == Guid.Empty ? GuidParseProblem.Empty : guid.Value;
 }

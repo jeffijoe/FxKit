@@ -3,7 +3,7 @@ using FxKit.CompilerServices.Models;
 namespace FxKit.CompilerServices.Utilities;
 
 /// <summary>
-///     Manages writing the type hierarchy to an <see cref="IndentedTextWriter"/>.
+///     Manages writing the type hierarchy to an <see cref="IndentedTextWriter" />.
 /// </summary>
 internal class TypeHierarchyWriter : IDisposable
 {
@@ -41,7 +41,7 @@ internal class TypeHierarchyWriter : IDisposable
 
     /// <summary>
     ///     Writes the type hierarchy to the given writer, and returns
-    ///     an instance of <see cref="TypeHierarchyWriter"/> that should be disposed
+    ///     an instance of <see cref="TypeHierarchyWriter" /> that should be disposed
     ///     when the trailing `}`s should be written.
     /// </summary>
     /// <param name="writer"></param>

@@ -54,7 +54,7 @@ internal readonly record struct TypeConstraint(string FullyQualifiedTypeName);
 /// <param name="Name">Name of the type parameter.</param>
 /// <param name="Constraints">Any constraints on the type parameter.</param>
 /// <param name="TypeConstraints">
-///     If <see cref="Constraints"/> includes <see cref="Transformers.Constraints.Types"/>,
+///     If <see cref="Constraints" /> includes <see cref="Transformers.Constraints.Types" />,
 ///     will contain the list of types that the type parameter must implement.
 /// </param>
 internal readonly record struct TypeParameterConstraints(
@@ -98,12 +98,11 @@ internal readonly record struct TypeParameterConstraints(
         if (Constraints.HasFlag(Constraints.Types))
         {
             constraints.AddRange(
-                TypeConstraints.Select(
-                    static x =>
-                    {
-                        var typeSyntax = ParseTypeName(x.FullyQualifiedTypeName);
-                        return TypeConstraint(typeSyntax);
-                    }));
+                TypeConstraints.Select(static x =>
+                {
+                    var typeSyntax = ParseTypeName(x.FullyQualifiedTypeName);
+                    return TypeConstraint(typeSyntax);
+                }));
         }
 
         return TypeParameterConstraintClause(
@@ -112,7 +111,7 @@ internal readonly record struct TypeParameterConstraints(
     }
 
     /// <summary>
-    ///     Constructs a <see cref="TypeParameterConstraints"/> from a type parameter symbol.
+    ///     Constructs a <see cref="TypeParameterConstraints" /> from a type parameter symbol.
     /// </summary>
     /// <param name="typeParameterSymbol"></param>
     /// <returns></returns>
@@ -145,8 +144,8 @@ internal readonly record struct TypeParameterConstraints(
         {
             constraints |= Constraints.Types;
             typeConstraints = typeParameterSymbol.ConstraintTypes
-                .Select(
-                    x => new TypeConstraint(x.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)))
+                .Select(x =>
+                    new TypeConstraint(x.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)))
                 .ToEquatableArray();
         }
 

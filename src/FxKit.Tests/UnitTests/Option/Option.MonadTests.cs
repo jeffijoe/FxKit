@@ -15,7 +15,7 @@ namespace FxKit.Tests.UnitTests.Option;
 ///     <para>
 ///         This class contains tests that test the Monad Laws as they apply to <see cref="Option{T}" />.
 ///         You don't need to understand these laws in order to use <see cref="Option{T}" /> effectively,
-///         the tests are just here to ensure we maintain a lawful implementation. Haskell is used in
+///         the tests are just here to ensure we maintain a lawful implementation. Haskell is used
 ///         in XML documentation to describe the laws, since it's ubiquitous within FP literature.
 ///     </para>
 /// </summary>
@@ -37,10 +37,23 @@ public class OptionMonadTests
     public async Task FlatMapAsync_FlatMapsCorrectly()
     {
 #pragma warning disable CS1998
+        // ReSharper disable AsyncMethodWithoutAwait
         await Option<int>.Some(3).FlatMapAsync(async x => Some(x + 1)).Should().BeSome(4);
         await Option<int>.Some(3).FlatMapAsync(async _ => Option<int>.None).Should().BeNone();
         await Option<int>.None.FlatMapAsync(async x => Some(x + 1)).Should().BeNone();
+        // ReSharper restore AsyncMethodWithoutAwait
 #pragma warning restore CS1998
+    }
+
+    [Test]
+    public void Or_ShouldBeReturned()
+    {
+        var l = Option<int>.None;
+        var r = l.Or(1);
+        var rElse = l.OrElse(() => 2);
+
+        r.Should().BeSome(1);
+        rElse.Should().BeSome(2);
     }
 
     #region Monad Laws
@@ -94,17 +107,6 @@ public class OptionMonadTests
     }
 
     #endregion
-
-    [Test]
-    public void Or_ShouldBeReturned()
-    {
-        var l = Option<int>.None;
-        var r = l.Or(1);
-        var rElse = l.OrElse(() => 2);
-
-        r.Should().BeSome(1);
-        rElse.Should().BeSome(2);
-    }
 
     #region LINQ
 

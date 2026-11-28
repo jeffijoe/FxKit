@@ -60,6 +60,6 @@ public static partial class Prelude
     /// </summary>
     /// <param name="_">Any value.</param>
     /// <typeparam name="T">The type of ignored value.</typeparam>
-    /// <returns>The <see cref="FxKit.Unit"/> value, regardless of the input value.</returns>
+    /// <returns>The <see cref="FxKit.Unit" /> value, regardless of the input value.</returns>
     public static Unit Ignore<T>(T _) => FxKit.Unit.Default;
 }

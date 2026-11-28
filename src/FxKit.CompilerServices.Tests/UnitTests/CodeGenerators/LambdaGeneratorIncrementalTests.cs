@@ -21,10 +21,7 @@ public class LambdaGeneratorIncrementalTests
             [Lambda]
             public partial record Foo(string Param1, int Param2);
             """);
-        var compilation = CreateCompilation(
-        [
-            originalTree,
-        ]);
+        var compilation = CreateCompilation(originalTree);
 
         // Run it once.
         GeneratorDriver driver = CSharpGeneratorDriver.Create(

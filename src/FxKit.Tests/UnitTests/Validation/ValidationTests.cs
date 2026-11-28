@@ -44,12 +44,11 @@ public partial class ValidationTests
 
         validation = Invalid(["nope", "not good"]);
         validation.FlatMap(v => BakeErr<string>.Valid(v + 1)).Should().BeInvalid(["nope", "not good"]);
-        validation.FlatMap(
-                _ =>
-                {
-                    Assert.Fail("Unreachable");
-                    return BakeErr<string>.Valid(1);
-                })
+        validation.FlatMap(_ =>
+            {
+                Assert.Fail("Unreachable");
+                return BakeErr<string>.Valid(1);
+            })
             .Should()
             .BeInvalid(["nope", "not good"]);
     }
@@ -59,9 +58,9 @@ public partial class ValidationTests
     {
         int[] list = [1, 2, 3];
 
-        list.Traverse(i => BakeErr<string>.Valid(i * 2)).Should().BeValid().Should().Equal([2, 4, 6]);
+        list.Traverse(i => BakeErr<string>.Valid(i * 2)).Should().BeValid().Should().Equal(2, 4, 6);
 
-        list.Traverse(i => BakeValid<int>.Invalid(i * 2)).Should().BeInvalid().Should().Equal([2, 4, 6]);
+        list.Traverse(i => BakeValid<int>.Invalid(i * 2)).Should().BeInvalid().Should().Equal(2, 4, 6);
     }
 
     [Test]

@@ -144,12 +144,11 @@ public class TransformerGeneratorReferencedAssembliesTests
             // All outputs except the last one are transformers.
             var transformerOutputs = outputs.Take(outputs.Count - 1);
             transformerOutputs.Should()
-                .AllSatisfy(
-                    transformers =>
-                    {
-                        transformers.Reason.Should()
-                            .BeOneOf(IncrementalStepRunReason.Modified, IncrementalStepRunReason.New);
-                    });
+                .AllSatisfy(transformers =>
+                {
+                    transformers.Reason.Should()
+                        .BeOneOf(IncrementalStepRunReason.Modified, IncrementalStepRunReason.New);
+                });
 
             var assemblyAttribute = outputs.Last();
             assemblyAttribute.Reason.Should().Be(IncrementalStepRunReason.Cached);

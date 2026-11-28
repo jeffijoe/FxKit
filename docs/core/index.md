@@ -4,10 +4,12 @@ FxKit exposes C#-friendly implementations of common functional programming data 
 
 * [`Unit`](unit): A replacement for `void` that can be used as a value.
 * [`Option`](option): Alternative to nullable types.
-* [`Result`](result): Contains either a success value or an error value. The API is similar to that of Rust's `Result` type.
+* [`Result`](result): Contains either a success value or an error value. The API is similar to that of Rust's `Result`
+  type.
 * [`Validation`](validation): Like `Result` but can hold multiple errors.
 
-They do not allow nullable types (that is, types annotated with `?`, e.g. `int?`, `string?`) in any of their type parameters.
+They do not allow nullable types (that is, types annotated with `?`, e.g. `int?`, `string?`) in any of their type
+parameters.
 
 ## C# interop
 
@@ -19,19 +21,23 @@ FxKit, being a C# library, exposes the following escape hatches and convenience 
 
 ::: tip
 Each type has implicit conversions where possible. Example:
+
 ```csharp
 Option<int> o = 1;
 ```
+
 Is the same as
 
 ```csharp
 Option<int> o = Some(1);
 ```
+
 :::
 
 ## Functors
 
-`Option`, `Result`, and `Validation`  all share the property of being [functors][functors]. In FxKit, that means they all have
+`Option`, `Result`, and `Validation`  all share the property of being [functors][functors]. In FxKit, that means they
+all have
 a `Map` / `Select` method which transform the inner value.
 
 In addition, methods have also been provided for the following built-in standard library types in order to
@@ -94,19 +100,22 @@ IEnumerable<int> squaredNumbers =
     from x in numbers
     select x * x;
 ```
+
 :::
 
 [functors]: https://en.wikipedia.org/wiki/Functor_(functional_programming)#:~:text=In%20functional%20programming%2C%20a%20functor,structure%20of%20the%20generic%20type.
 
 ## Monads
 
-In short, [monads][monads] in FxKit are types which have a `FlatMap` / `SelectMany` method subject to certain laws (also called monadic bind).
+In short, [monads][monads] in FxKit are types which have a `FlatMap` / `SelectMany` method subject to certain laws (also
+called monadic bind).
 All the functors listed above also happen to be monads. `FlatMap` is used to transform and flatten nested monadic
 structures (like `Task<Task<T>>` or `Option<Option<T>>`) into a single monad (like `Task<T>` or `Option<T>`).
 
 **Examples**
 
 ::: code-group
+
 ```csharp [Option]
 // Function that parses a string as a number if possible.
 public static Option<int> ParseNumber(string str) =>
@@ -144,6 +153,7 @@ Task<int> temperatureAtCurrentLocation =
     from temperature in GetTemperatureAtLocationAsync(location)
     select temperature;
 ```
+
 :::
 
 [monads]: https://en.wikipedia.org/wiki/Monad_(functional_programming)
@@ -173,6 +183,7 @@ public static Option<UU> SelectMany<T, U, UU>(
 This allows us to use LINQ query syntax:
 
 ::: code-group
+
 ```csharp [Query syntax]
 Option<int> leftOption = 1;
 Option<int> rightOption = 2;
@@ -205,12 +216,14 @@ Option<string> result =
         })
     .Select(@t => @t.sum.ToString());
 ```
+
 :::
 
 The overload that accepts 2 functions is used under certain situations, such as accessing a
 property that is also of the same type. This is done as an optimization.
 
 ::: code-group
+
 ```csharp [Query syntax]
 public record Language(
     string Name,
@@ -241,4 +254,5 @@ Option<string> howDoesLanguageImplementDoNotation =
         (language, doNotation) =>
             $"{language} implements do-notation using {doNotation}");
 ```
+
 :::

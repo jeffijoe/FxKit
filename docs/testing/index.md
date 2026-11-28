@@ -1,12 +1,16 @@
 # Testing
 
-FxKit.Testing provides specialized testing utilities and FluentAssertions extensions for working with functional data types in FxKit. These tools make it easier to write clear, expressive tests when working with `Option`, `Result`, `Validation`, and their async counterparts.
+FxKit.Testing provides specialized testing utilities and FluentAssertions extensions for working with functional data
+types in FxKit. These tools make it easier to write clear, expressive tests when working with `Option`, `Result`,
+`Validation`, and their async counterparts.
 
 ## Overview
 
-Testing functional code requires different patterns than traditional imperative code. FxKit.Testing bridges this gap by providing:
+Testing functional code requires different patterns than traditional imperative code. FxKit.Testing bridges this gap by
+providing:
 
-- **FluentAssertions Extensions**: Custom assertion methods for FxKit types that integrate seamlessly with FluentAssertions
+- **FluentAssertions Extensions**: Custom assertion methods for FxKit types that integrate seamlessly with
+  FluentAssertions
 - **Type-Safe Assertions**: Compile-time checked assertions that understand the structure of functional types
 - **Async Support**: Full support for testing `Task<Option<T>>`, `Task<Result<T, E>>`, and other async variants
 - **Clear Failure Messages**: Detailed error messages that show exactly what went wrong in your tests
